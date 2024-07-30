@@ -59,5 +59,3 @@ jobs:
       run: terraform destroy --auto-approve
     # Destroys the Terraform-managed infrastructure to clean up resources, 
     # ensuring this step always runs regardless of previous success or failure.
-
-      
