@@ -16,37 +16,48 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+    # Checks out the code from the repository to ensure the working directory contains the latest files.
+    
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ env.access_key }}
         aws-secret-access-key: ${{ env.secret_key }}
         aws-region: ${{ env.region }}
+    # Configures AWS credentials for Terraform using secrets from GitHub Actions.
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: "1.8.5"
+    # Installs the specified version of Terraform for use in subsequent steps.
 
     - name: Terraform Init
       run: terraform init
+    # Initializes Terraform configuration, downloading any necessary plugins
 
     - name: Terraform Validate
       run: terraform validate
+    # Validates the Terraform configuration to ensure it is syntactically valid and internally consistent.
 
     - name: Terraform Apply
       run: |
         terraform apply --auto-approve
         sleep 60 
+    # Applies the Terraform configuration to provision the infrastructure, automatically approving any changes. 
+    # Waits for 60 seconds to allow LB to be accessable.
 
     - name: Check Connectivity to Application
       run: |
         ALB_DNS_NAME=$(terraform output -json alb_dns_name | jq -r)
         curl -f "${ALB_DNS_NAME}" || echo "Curl failed"
+    # Retrieves the DNS name of the Application Load Balancer (ALB) from Terraform outputs 
+    # and checks connectivity to the application using `curl`.
 
     - name: Clean up Terraform
       if: always()
       run: terraform destroy --auto-approve
+    # Destroys the Terraform-managed infrastructure to clean up resources, 
+    # ensuring this step always runs regardless of previous success or failure.
 
       
