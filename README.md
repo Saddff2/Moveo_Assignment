@@ -42,9 +42,10 @@ terraform init
 terraform apply
 ```
 3. Verify Deployment
+   
 Once the deployment is complete, access the public DNS of the Application Load Balancer (ALB) in your web browser. You should see the text “yo this is nginx” displayed.
 
-4. Clean Up
+5. Clean Up
 ```
 terraform destroy
 ```
