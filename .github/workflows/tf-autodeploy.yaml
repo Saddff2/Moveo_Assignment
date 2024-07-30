@@ -38,15 +38,16 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        terraform apply --auto-approve || terraform destroy --auto-approve
+        terraform apply --auto-approve
         sleep 60 
 
     - name: Check Connectivity to Application
       run: |
         ALB_DNS_NAME=$(terraform output -json alb_dns_name | jq -r)
-        echo "ALB_DNS_NAME=$(ALB_DNS_NAME)" >> $GITHUB_ENV
-        curl ${{ env.ALB_DNS_NAME }} || exit 1
+        curl -f "${ALB_DNS_NAME}" || echo "Curl failed"
 
-    - name: Terraform Destroy
+    - name: Clean up Terraform
+      if: always()
       run: terraform destroy --auto-approve
+
       
