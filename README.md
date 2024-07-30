@@ -29,23 +29,23 @@ The deployment uses a combination of AWS infrastructure, Docker, and Terraform t
 
 ## Deployment Steps
 
-1. Clone the repository.
+1. **Clone the repository.**
 ```
 git clone https://github.com/Saddff2/Moveo_Assignment.git
 cd Moveo_Assignment
 ```
 
-2. Deploy Infrastructure
+2. **Deploy Infrastructure**
 
 ```
 terraform init
 terraform apply
 ```
-3. Verify Deployment
+3. **Verify Deployment**
    
 Once the deployment is complete, access the public DNS of the Application Load Balancer (ALB) in your web browser. You should see the text “yo this is nginx” displayed.
 
-5. Clean Up
+4. **Clean Up**
 ```
 terraform destroy
 ```
