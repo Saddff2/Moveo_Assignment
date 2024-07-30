@@ -1,0 +1,49 @@
+name: Deploy NGINX Instance
+
+on:
+  push:
+    branches:
+    - main
+    - dev
+  workflow_dispatch:
+
+env: 
+  access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
+  region: il-central-1
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ env.access_key }}
+        aws-secret-key-id: ${{ env.secret_key }}
+        aws-region: ${{ env.region }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform-version: "1.8.5"
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Apply
+      run: |
+        terraform apply --auto-approve
+        sleep 60 
+
+    - name: Check Connectivity to Application
+      run: |
+        ALB_DNS_NAME=$(terraform output -json alb_dns_name | jq -r)
+        echo "ALB_DNS_NAME=$(ALB_DNS_NAME)" >> $GITHUB_ENV
+        curl ${{ env.ALB_DNS_NAME }} || exit 1
+      
