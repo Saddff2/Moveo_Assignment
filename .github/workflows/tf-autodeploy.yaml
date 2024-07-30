@@ -5,11 +5,11 @@ on:
     branches:
     - main
   workflow_dispatch:
-
 env: 
   access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
   secret_key: ${{ secrets.AWS_SECRET_KEY_ID }}
   region: il-central-1
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
