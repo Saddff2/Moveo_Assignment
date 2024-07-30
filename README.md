@@ -48,3 +48,14 @@ Once the deployment is complete, access the public DNS of the Application Load B
 ```
 terraform destroy
 ```
+
+## Final Results 
+
+1. A deployed instance of the application accessible from the public.
+<img width="767" alt="Screenshot" src="https://github.com/user-attachments/assets/f6e81cc3-8260-4692-8db7-19e3b94e8970">
+
+
+2. Dockerized Nginx that can run locally.
+<img width="773" alt="Screenshot" src="https://github.com/user-attachments/assets/5089edd7-b4a9-45c3-ab62-f7d5305c7997">
+
+
