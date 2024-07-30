@@ -95,7 +95,7 @@ resource "aws_route" "private_nat_gateway" {
   nat_gateway_id         = aws_nat_gateway.nat.id
 }
 
-# Route Table Association
+# Private Route Table Association
 resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private.id
   route_table_id = aws_route_table.private.id
@@ -120,8 +120,8 @@ resource "aws_nat_gateway" "nat" {
 
 # EC2 instance with Dockerized NGINX
 resource "aws_instance" "nginx" {
-  ami             = "ami-0de6215d9c2342df5"
-  instance_type   = "t3.micro"
+  ami             = var.ami_id
+  instance_type   = var.instance_type
   subnet_id       = aws_subnet.private.id
   security_groups = [aws_security_group.nginx.id]
   depends_on      = [aws_nat_gateway.nat]
@@ -133,46 +133,49 @@ resource "aws_instance" "nginx" {
   }
 }
 
-# Security groups for EC2 instance and Load Balancer
+# Dynamic Security Groups for EC2 instance and Load Balancer
 resource "aws_security_group" "nginx" {
   vpc_id = aws_vpc.main.id
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+
+  dynamic "ingress" {
+    for_each = var.nginx_ingress_ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "nginx-security-group"
   }
 }
 
 resource "aws_security_group" "elb" {
   vpc_id = aws_vpc.main.id
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+
+  dynamic "ingress" {
+    for_each = var.elb_ingress_ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "elb-security-group"
-  }
 }
+
 
 # Create Application Load Balancer
 resource "aws_lb" "main" {
