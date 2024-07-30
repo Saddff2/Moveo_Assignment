@@ -28,7 +28,7 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        terraform-version: "1.8.5"
+        terraform_version: "1.8.5"
 
     - name: Terraform Init
       run: terraform init
@@ -38,7 +38,7 @@ jobs:
 
     - name: Terraform Apply
       run: |
-        terraform apply --auto-approve
+        terraform apply --auto-approve || terraform destroy --auto-approve
         sleep 60 
 
     - name: Check Connectivity to Application
