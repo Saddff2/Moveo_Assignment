@@ -32,7 +32,7 @@ The deployment uses a combination of AWS infrastructure, Docker, and Terraform t
 1. Clone the repository.
 ```
 git clone https://github.com/Saddff2/Moveo_Assignment.git
-git cd Moveo_Assignment
+cd Moveo_Assignment
 ```
 
 2. Deploy Infrastructure
