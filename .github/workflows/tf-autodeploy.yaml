@@ -46,4 +46,7 @@ jobs:
         ALB_DNS_NAME=$(terraform output -json alb_dns_name | jq -r)
         echo "ALB_DNS_NAME=$(ALB_DNS_NAME)" >> $GITHUB_ENV
         curl ${{ env.ALB_DNS_NAME }} || exit 1
+
+    - name: Terraform Destroy
+      run: terraform destroy --auto-approve
       
