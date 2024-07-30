@@ -13,7 +13,7 @@ The deployment uses a combination of AWS infrastructure, Docker, and Terraform t
 * **Security Groups**: To ensure secure communication.
 * **Internet Gateway**: Grants public subnets access to the internet.
 * **NAT Gateway**: Allows private subnet to reach the internet without directly exposing it.
-* **Application Load Balances (ALB)**: Balances incoming traffic to the EC2 instance. 
+* **Application Load Balancer (ALB)**: Balances incoming traffic to the EC2 instance. 
 
 
 ### Infrastructure Diagram
